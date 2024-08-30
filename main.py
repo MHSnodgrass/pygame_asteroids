@@ -23,10 +23,16 @@ def main():
 
         # Update the screen to black
         screen.fill((0, 0, 0))
+
         # Draw the player to the screen
         player.draw(screen)
+
+        # Update the players position/rotation
+        player.update(dt)
+
         # Refresh the display
         pygame.display.flip()
+        
         # Pauses game loop until 1/60th of a second has passed (60 FPS)
         # Returns the amount of time that has pissed since it was last called, dividing by 1000 to get seconds and saving it to the delta
         dt = (clock.tick(60)) / 1000
