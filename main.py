@@ -53,6 +53,11 @@ def main():
             if (player.collision(unit)):
                 print("Game over!")
                 return
+            
+            # Loop through shots to see if they are colliding with the asteroids
+            for shot in shots:
+                if unit.collision(shot):
+                    unit.split()
 
         # Refresh the display
         pygame.display.flip()
