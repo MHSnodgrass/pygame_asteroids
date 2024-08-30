@@ -4,6 +4,8 @@
 import pygame
 from constants import *
 from player import *
+from asteroid import *
+from asteroidfield import *
 
 def main():
     # print("Starting asteroids!")
@@ -13,7 +15,18 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    
+
+    # groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable)
+
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT /2)
+    asteroid_field = AsteroidField()
 
     while True:
         # If the user hits the close button (x), it will actually close the game
@@ -24,15 +37,23 @@ def main():
         # Update the screen to black
         screen.fill((0, 0, 0))
 
-        # Draw the player to the screen
-        player.draw(screen)
+        # Loop through drawable group and call draw method
+        for unit in drawable:
+            unit.draw(screen)
 
-        # Update the players position/rotation
-        player.update(dt)
+        # Loop through updatable group and call update method
+        for unit in updatable:
+            unit.update(dt)
+
+        # Loop through asteroid group to check for collision
+        for unit in asteroids:
+            if (player.collision(unit)):
+                print("Game over!")
+                return
 
         # Refresh the display
         pygame.display.flip()
-        
+
         # Pauses game loop until 1/60th of a second has passed (60 FPS)
         # Returns the amount of time that has pissed since it was last called, dividing by 1000 to get seconds and saving it to the delta
         dt = (clock.tick(60)) / 1000
